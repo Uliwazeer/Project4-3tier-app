@@ -1,0 +1,6 @@
+sonar-token
+
+
+squ_44a422fb0940cc19dbed2389648ba02ea892f82b
+
+git
