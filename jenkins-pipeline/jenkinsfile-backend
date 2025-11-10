@@ -17,11 +17,13 @@ pipeline {
                 cleanWs()
             }
         }
+
         stage('Checkout from Git') {
             steps {
                 git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/Uliwazeer/Project4-3tier-app.git'
             }
         }
+
         stage('Sonarqube Analysis') {
             steps {
                 dir('app-code/backend') {
@@ -37,6 +39,7 @@ pipeline {
                 }
             }
         }
+
         stage('Quality Check') {
             steps {
                 script {
@@ -44,6 +47,7 @@ pipeline {
                 }
             }
         }
+
         stage('OWASP Dependency-Check Scan') {
             steps {
                 dir('app-code/backend') {
@@ -52,6 +56,7 @@ pipeline {
                 }
             }
         }
+
         stage('Trivy File Scan') {
             steps {
                 dir('app-code/backend') {
@@ -59,6 +64,7 @@ pipeline {
                 }
             }
         }
+
         stage("Docker Image Build") {
             steps {
                 script {
@@ -70,6 +76,7 @@ pipeline {
                 }
             }
         }
+
         stage("ECR Image Pushing") {
             steps {
                 script {
@@ -79,16 +86,20 @@ pipeline {
                 }
             }
         }
+
         stage("TRIVY Image Scan") {
             steps {
                 sh 'trivy image ${REPOSITORY_URI}${AWS_ECR_REPO_NAME}:${BUILD_NUMBER} > trivyimage.txt'
             }
         }
+
         stage('Checkout Code for Deployment') {
             steps {
+                // تأكد إن كل checkout يكون على الريبو الخاص بك
                 git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/Uliwazeer/Project4-3tier-app.git'
             }
         }
+
         stage('Update Deployment file') {
             environment {
                 GIT_REPO_NAME = "Project4-3tier-app"
@@ -104,19 +115,19 @@ pipeline {
                             BUILD_NUMBER=${BUILD_NUMBER}
                             echo "Build number: $BUILD_NUMBER"
 
-                            # استخراج image tag الحالي بشكل آمن
+                            # استخراج image tag الحالي
                             imageTag=$(grep 'backend:' deployment.yaml | awk -F: '{print $2}' | tr -d '[:space:]')
                             echo "Current image tag: $imageTag"
 
-                            # تحديث الـ deployment.yaml
+                            # تحديث deployment.yaml
                             sed -i "s/${AWS_ECR_REPO_NAME}:${imageTag}/${AWS_ECR_REPO_NAME}:${BUILD_NUMBER}/" deployment.yaml
 
-                            # إضافة التغييرات والcommit
+                            # إضافة commit
                             git add deployment.yaml
                             git commit -m "Update deployment Image to version ${BUILD_NUMBER}"
 
-                            # push باستخدام الـ token
-                            git push https://${GITHUB_TOKEN}@github.com/Uliwazeer/Project4-3tier-app.git HEAD:main || echo "Push failed: check token permissions"
+                            # push على الريبو الخاص بك فقط
+                            git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
                         '''
                     }
                 }
@@ -124,4 +135,3 @@ pipeline {
         }
     }
 }
-
