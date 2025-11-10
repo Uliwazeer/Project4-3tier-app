@@ -86,7 +86,7 @@ pipeline {
         }
         stage('Checkout Code') {
             steps {
-                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/codewithmuh/three-tier-devsecops-project.git'
+                git branch: 'main', credentialsId: 'GITHUB', url: 'https://github.com/Uliwazeer/Project4-3tier-app.git'
             }
         }
         stage('Update Deployment file') {
@@ -114,4 +114,5 @@ pipeline {
             }
         }
     }
+
 }
