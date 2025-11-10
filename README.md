@@ -4,6 +4,9 @@
 **Tech Stack:** AWS EKS, ArgoCD, Prometheus, Grafana, Jenkins, Terraform, Docker, Kubernetes, React, Django, PostgreSQL, Trivy, SonarQube, OWASP Dependency-Check 
 ![DevSecOps_Project](https://github.com/user-attachments/assets/c64357f7-af80-45ce-a422-c1dcf146556c)
 
+## Jenkins Pipeline Architecture
+<img width="1344" height="768" alt="Gemini_Generated_Image_hmqx61hmqx61hmqx" src="https://github.com/user-attachments/assets/57fafb3a-49cf-4b32-a5be-2901c73f40df" />
+
 ---
 
 ## 🚀 Project Overview
